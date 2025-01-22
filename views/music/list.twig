@@ -25,6 +25,36 @@
       </form>
     </div>
 
+    <hr>
+
+    <div class="form-container">
+      <h2>Rechercher une musique sur YouTube</h2>
+      <form id="youtube-search-form" action="/music/search" method="GET">
+        <div class="form-group">
+          <input type="text" name="query" placeholder="Recherche YouTube" required class="input">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="button primary">Rechercher</button>
+        </div>
+      </form>
+    </div>
+
+    {% if youtubeResults %}
+    <div class="list-container">
+      <h2>Résultats de recherche</h2>
+      <ul class="track-list">
+        {% for result in youtubeResults %}
+          <li class="track-item">
+            <strong>{{ result.title }}</strong>
+            <a href="/music/download?videoId={{ result.videoId }}" class="button secondary">Télécharger</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <hr>
+
     <div class="list-container">
       <h2>Liste des morceaux</h2>
       <ul class="track-list">

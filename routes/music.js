@@ -1,10 +1,15 @@
 const express = require('express');
+require('dotenv').config();
 const router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
 const db = require('../database/db');
 const { getAudioDurationInSeconds } = require('get-audio-duration');
-
+const ytdl = require('ytdl-core');
+const youtubeSearch = require('youtube-search');
+const { exec } = require('child_process');
+const path = require('path');
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
 // Configuration de multer pour traiter les fichiers uploadés
 const upload = multer({ storage: multer.memoryStorage() });
@@ -119,5 +124,83 @@ router.get('/play/:id/previous', (req, res) => {
   });
 });
 
+// Options pour l'API YouTube Data
+const searchOpts = {
+  maxResults: 10,
+  key: YOUTUBE_API_KEY,
+  type: 'video'
+};
+
+// Route pour rechercher sur YouTube
+router.get('/search', (req, res) => {
+  const query = req.query.query;
+  youtubeSearch(query, searchOpts, (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la recherche sur YouTube :', err);
+      res.status(500).send('Erreur lors de la recherche sur YouTube.');
+    } else {
+      const youtubeResults = results.map(result => ({
+        title: result.title,
+        videoId: result.id
+      }));
+      res.render('music/list', { title: 'Liste des morceaux', youtubeResults });
+    }
+  });
+});
+
+// Route pour télécharger une vidéo YouTube et l'ajouter à la base
+router.get('/download', (req, res) => {
+  const videoId = req.query.videoId;
+  const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+  const outputPath = path.join(__dirname, '../public/uploads');
+  const outputFile = path.join(outputPath, `${videoId}.mp3`);
+
+  // Commande yt-dlp pour récupérer les métadonnées et télécharger
+  const command = `yt-dlp --extract-audio --audio-format mp3 --write-info-json --output "${outputPath}/%(id)s.%(ext)s" ${videoUrl}`;
+
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error('Erreur lors du téléchargement :', error.message);
+      res.status(500).send('Erreur lors du téléchargement de la vidéo.');
+      return;
+    }
+
+    try {
+      // Charger les métadonnées JSON
+      const metadataFile = path.join(outputPath, `${videoId}.info.json`);
+      const metadata = JSON.parse(fs.readFileSync(metadataFile, 'utf-8'));
+
+      const title = metadata.title || `YouTube Video - ${videoId}`;
+      const artist = metadata.uploader || 'YouTube';
+      const album = metadata.uploader || 'YouTube';
+      const duration = Math.floor(metadata.duration || 0); // Durée en secondes
+
+      console.log(`Téléchargement réussi : ${title}, durée ${duration} secondes.`);
+
+      // Lire le fichier MP3
+      const fileBuffer = fs.readFileSync(outputFile);
+
+      // Ajouter à la base de données
+      db.run(
+        `INSERT INTO tracks (title, artist, album, duration, file) VALUES (?, ?, ?, ?, ?)`,
+        [title, artist, album, duration, fileBuffer],
+        (err) => {
+          if (err) {
+            console.error('Erreur lors de l’ajout à la base :', err);
+            res.status(500).send('Erreur lors de l’ajout à la base.');
+          } else {
+            // Nettoyer les fichiers temporaires
+            fs.unlinkSync(outputFile);
+            fs.unlinkSync(metadataFile);
+            res.redirect('/music');
+          }
+        }
+      );
+    } catch (err) {
+      console.error('Erreur lors de la lecture des métadonnées ou du fichier :', err.message);
+      res.status(500).send('Erreur lors de la lecture des métadonnées.');
+    }
+  });
+});
 
 module.exports = router;

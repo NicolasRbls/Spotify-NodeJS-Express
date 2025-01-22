@@ -4,6 +4,7 @@ const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 const musicRoutes = require('./routes/music');
 const authRoutes = require('./routes/auth');
+require('dotenv').config();
 
 const app = express();
 const PORT = 3000;
