@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="/node_modules/retro.css/css/index.min.css">
+  <style>
+    .nav-bar {
+      position: fixed; /* Position fixe pour rester en haut de la page */
+      top: 0;
+      left: 0;
+      width: 100%; /* Prend toute la largeur de la page */
+      background-color: #444;
+      color: #fff;
+      display: flex;
+      justify-content: space-between; /* Sépare le contenu à gauche et à droite */
+      align-items: center; /* Centre verticalement les éléments */
+      padding: 10px 20px;
+      z-index: 1000; /* Assure que la barre est au-dessus du contenu */
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    .nav-bar a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .nav-bar a:hover {
+      text-decoration: underline;
+    }
+    .nav-bar .title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .nav-bar .actions {
+      display: flex; /* Aligne les boutons sur une ligne */
+      gap: 10px; /* Ajoute un espace entre les boutons */
+      margin-right: 20px; /* Décale les boutons vers l'intérieur de la page */
+    }
+    body {
+      padding-top: 60px; /* Ajoute un espace pour éviter que le contenu ne soit caché sous la barre */
+    }
+
+  .form-container {
+    max-width: 500px;
+    margin: 0 auto 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .content-container {
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  .list-container {
+    margin-top: 20px;
+  }
+  .track-list {
+    list-style: none;
+    padding: 0;
+  }
+  .track-item {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .player-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 20px;
+  }
+
+  .music-player {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .player-image {
+    margin-bottom: 20px;
+  }
+
+  .music-note {
+    width: 120px;
+    height: auto;
+  }
+
+  .track-info {
+    margin-bottom: 30px;
+  }
+
+  .track-info h2 {
+    margin: 0 0 10px 0;
+    color: #333;
+  }
+
+  .track-info p {
+    margin: 5px 0;
+    color: #666;
+  }
+
+  .audio-controls {
+    margin-top: 20px;
+  }
+
+  .controls-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .control-btn {
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .artist {
+    font-style: italic;
+    color: #666;
+  }
+
+  .duration {
+    font-size: 0.9em;
+    color: #888;
+  }
+
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav-bar">
+      <a href="/" class="title">Music App</a> <!-- Le titre est maintenant un lien -->
+      <div class="actions">
+        {% if session.userId %}
+          <a href="/auth/logout" class="button secondary">Déconnexion</a>
+          <a href="/music" class="button primary">Ma Musique</a>
+        {% else %}
+          <a href="/auth/login" class="button primary">Connexion</a>
+          <a href="/auth/register" class="button secondary">Inscription</a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+  <main class="content">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

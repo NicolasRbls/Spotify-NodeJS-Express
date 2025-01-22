@@ -1,60 +1,57 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>{{ title }}</title>
-  <link rel="stylesheet" href="https://unpkg.com/retro.css">
-  <style>
-    .music-player {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-    }
-    .music-player img {
-      width: 150px;
-      margin-bottom: 20px;
-    }
-    .controls {
-      display: flex;
-      gap: 20px;
-      margin-top: 20px;
-    }
-    .controls button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
+{% extends "base.twig" %}
+
+{% block content %}
+<div class="player-container">
   <div class="music-player">
-    <img src="/images/music-note.png" alt="Note de musique">
-    <h1>{{ track.title }}</h1>
-    <p>Artiste : {{ track.artist }}</p>
-    <p>Durée : {{ track.duration }} secondes</p>
-    <audio id="audio-player" src="/music/play/{{ track.id }}" controls></audio>
-    <div class="controls">
-      <button onclick="playMusic()">Play</button>
-      <button onclick="pauseMusic()">Pause</button>
-      <button onclick="goBack()">Précédent</button>
+    <div class="player-image">
+      <img src="/images/music-note.png" alt="Note de musique" class="music-note">
+    </div>
+    <div class="track-info">
+      <h2>{{ track.title }}</h2>
+      <p class="artist">{{ track.artist }}</p>
+      {% if track.album %}
+        <p class="album">Album: {{ track.album }}</p>
+      {% endif %}
+      <p class="duration">Durée: {{ track.duration }} secondes</p>
+    </div>
+    <div class="controls-container">
+      <a href="/music/player/{{ previousTrack }}" class="button control-btn" 
+        {% if not previousTrack %}style="pointer-events: none; opacity: 0.5;"{% endif %}>
+        ⏮ 
+      </a>
+      <button onclick="playPauseMusic()" class="button primary control-btn" id="playPauseBtn">
+        <span id="playPauseIcon">▶</span>
+      </button>
+      <a href="/music/player/{{ nextTrack }}" class="button control-btn" 
+        {% if not nextTrack %}style="pointer-events: none; opacity: 0.5;"{% endif %}>
+         ⏭
+      </a>
+    </div>
     </div>
   </div>
-  <script>
-    const audio = document.getElementById('audio-player');
+</div>
 
-    function playMusic() {
+<!-- L'élément audio a une URL corrigée -->
+<audio id="audio-player" src="/music/play/{{ track.id }}"></audio>
+
+<script>
+  const audio = document.getElementById('audio-player');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const playPauseIcon = document.getElementById('playPauseIcon');
+  
+  function playPauseMusic() {
+    if (audio.paused) {
       audio.play();
-    }
-
-    function pauseMusic() {
+      playPauseIcon.textContent = '⏸';
+    } else {
       audio.pause();
+      playPauseIcon.textContent = '▶';
     }
+  }
 
-    function goBack() {
-      window.history.back();
-    }
-  </script>
-</body>
-</html>
+  // Mettre à jour le bouton quand la lecture se termine
+  audio.addEventListener('ended', () => {
+    playPauseIcon.textContent = '▶';
+  });
+</script>
+{% endblock %}

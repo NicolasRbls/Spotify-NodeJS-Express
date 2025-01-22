@@ -1,15 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>{{ title }}</title>
-  <link rel="stylesheet" href="https://unpkg.com/retro.css">
-</head>
-<body>
-  <h1>Connexion</h1>
-  <form method="POST" action="/auth/login">
-    <input type="email" name="email" placeholder="Email" required />
-    <input type="password" name="password" placeholder="Mot de passe" required />
-    <button type="submit">Se connecter</button>
-  </form>
-</body>
-</html>
+{% extends "base.twig" %}
+
+{% block content %}
+  <div class="form-container">
+    <h1>Connexion</h1>
+    <form method="POST" action="/auth/login">
+      <div class="form-group">
+        <input type="email" name="email" placeholder="Email" required class="input">
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" placeholder="Mot de passe" required class="input">
+      </div>
+      <div class="form-group">
+        <button type="submit" class="button primary">Se connecter</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

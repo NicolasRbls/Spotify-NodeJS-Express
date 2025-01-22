@@ -42,9 +42,18 @@ function isAuthenticated(req, res, next) {
   }
 }
 
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
+
+
 // Routes
 app.use('/auth', authRoutes);
 app.use('/music', isAuthenticated, musicRoutes);
+app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
+
+
 
 // Page d'accueil
 app.get('/', (req, res) => {

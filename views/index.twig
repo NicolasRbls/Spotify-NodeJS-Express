@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>{{ title }}</title>
-  <link rel="stylesheet" href="https://unpkg.com/retro.css">
-</head>
-<body>
+{% extends "base.twig" %}
+
+{% block content %}
   <h1>Bienvenue sur Music App</h1>
-  <p><a href="/auth/register">Inscription</a> | <a href="/auth/login">Connexion</a></p>
-</body>
-</html>
+  <p>Une plateforme rétro pour écouter votre musique préférée.</p>
+{% endblock %}

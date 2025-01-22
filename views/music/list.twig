@@ -1,31 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>{{ title }}</title>
-  <link rel="stylesheet" href="https://unpkg.com/retro.css">
-</head>
-<body>
-  <h1>{{ title }}</h1>
-  <p><a href="/auth/logout">Déconnexion</a></p>
-  
-  <h2>Ajouter un morceau</h2>
-  <form method="POST" action="/music/add" enctype="multipart/form-data">
-    <input type="text" name="title" placeholder="Titre" required />
-    <input type="text" name="artist" placeholder="Artiste" required />
-    <input type="text" name="album" placeholder="Album" />
-    <input type="number" name="duration" placeholder="Durée (secondes)" />
-    <input type="file" name="file" accept=".mp3" required />
-    <button type="submit">Ajouter</button>
-  </form>
+{% extends "base.twig" %}
 
-  <h2>Liste des morceaux</h2>
-  <ul>
-    {% for track in tracks %}
-      <li>
-        <strong>{{ track.title }}</strong> - {{ track.artist }}
-        <a href="/music/play/{{ track.id }}">Écouter</a>
-      </li>
-    {% endfor %}
-  </ul>
-</body>
-</html>
+{% block content %}
+  <div class="content-container">
+    <h1>{{ title }}</h1>
+
+    <div class="form-container">
+      <h2>Ajouter un morceau</h2>
+      <form method="POST" action="/music/add" enctype="multipart/form-data">
+        <div class="form-group">
+          <input type="text" name="title" placeholder="Titre" required class="input">
+        </div>
+        <div class="form-group">
+          <input type="text" name="artist" placeholder="Artiste" required class="input">
+        </div>
+        <div class="form-group">
+          <input type="text" name="album" placeholder="Album" class="input">
+        </div>
+        <div class="form-group">
+          <input type="file" name="file" accept=".mp3" required class="input">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="button primary">Ajouter</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="list-container">
+      <h2>Liste des morceaux</h2>
+      <ul class="track-list">
+        {% for track in tracks %}
+          <li class="track-item">
+            <strong>{{ track.title }}</strong> - {{ track.artist }}
+            <a href="/music/player/{{ track.id }}" class="button secondary">Écouter</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}
