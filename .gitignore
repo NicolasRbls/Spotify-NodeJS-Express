@@ -5,5 +5,7 @@
 node_modules/
 
 # Ignore les fichiers système
+database/music.db
+database/sessions.db
 .DS_Store
 Thumbs.db
