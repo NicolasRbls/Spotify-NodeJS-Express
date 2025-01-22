@@ -1,7 +1,7 @@
 const express = require('express');
+const path = require('path');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
-const path = require('path');
 const musicRoutes = require('./routes/music');
 const authRoutes = require('./routes/auth');
 
@@ -16,14 +16,20 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 
-// Configuration de la session
+// Configuration de la session (utilisation d'une base séparée)
 app.use(
   session({
-    store: new SQLiteStore({ db: 'sessions.sqlite' }),
-    secret: 'votre_secret_securise',
+    store: new SQLiteStore({
+      db: './database/sessions.db', // Base de données pour les sessions
+      table: 'sessions', // Table pour les sessions
+    }),
+    secret: 'votre_secret_securise', // Clé secrète
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } // Mettre true si HTTPS est utilisé
+    cookie: {
+      secure: false, // Mettre true si HTTPS est utilisé
+      maxAge: 1000 * 60 * 60 * 24, // 24 heures
+    },
   })
 );
 

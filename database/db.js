@@ -15,6 +15,7 @@ const db = new sqlite3.Database('./database/music.db', (err) => {
           artist TEXT NOT NULL,
           album TEXT,
           duration INTEGER,
+          file BLOB NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `);
@@ -29,8 +30,9 @@ const db = new sqlite3.Database('./database/music.db', (err) => {
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `);
+    
+      console.log('Tables "tracks", "users".');
 
-      console.log('Tables "tracks" et "users" initialisées.');
     });
   }
 });

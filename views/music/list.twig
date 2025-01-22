@@ -2,25 +2,30 @@
 <html>
 <head>
   <title>{{ title }}</title>
+  <link rel="stylesheet" href="https://unpkg.com/retro.css">
 </head>
 <body>
   <h1>{{ title }}</h1>
   <p><a href="/auth/logout">Déconnexion</a></p>
-  <ul>
-    {% for track in tracks %}
-      <li>
-        <strong>{{ track.title }}</strong> - {{ track.artist }}
-        ({{ track.album }}) - {{ track.duration }} secondes
-      </li>
-    {% endfor %}
-  </ul>
+  
   <h2>Ajouter un morceau</h2>
-  <form method="POST" action="/music/add">
+  <form method="POST" action="/music/add" enctype="multipart/form-data">
     <input type="text" name="title" placeholder="Titre" required />
     <input type="text" name="artist" placeholder="Artiste" required />
     <input type="text" name="album" placeholder="Album" />
     <input type="number" name="duration" placeholder="Durée (secondes)" />
+    <input type="file" name="file" accept=".mp3" required />
     <button type="submit">Ajouter</button>
   </form>
+
+  <h2>Liste des morceaux</h2>
+  <ul>
+    {% for track in tracks %}
+      <li>
+        <strong>{{ track.title }}</strong> - {{ track.artist }}
+        <a href="/music/play/{{ track.id }}">Écouter</a>
+      </li>
+    {% endfor %}
+  </ul>
 </body>
 </html>
