@@ -1,6 +1,53 @@
 {% extends "base.twig" %}
 
 {% block content %}
-  <h1>Bienvenue sur Music App</h1>
-  <p>Une plateforme rétro pour écouter votre musique préférée.</p>
+  <div class="homepage-container">
+    <h1 class="main-title">Bienvenue sur <span class="highlight">Music App</span></h1>
+    <p class="subtitle">Une plateforme rétro pour écouter et gérer votre musique préférée.</p>
+
+    <div class="feature-container">
+      <!-- Bloc 1 -->
+      <div class="feature-block">
+        <div class="icon-container">
+          <i class="fa fa-music"></i>
+        </div>
+        <h2>Écoutez vos morceaux</h2>
+        <p>Accédez facilement à votre bibliothèque de morceaux et écoutez-les où que vous soyez.</p>
+      </div>
+
+      <!-- Bloc 2 -->
+      <div class="feature-block">
+        <div class="icon-container">
+          <i class="fa fa-cloud-download-alt"></i> <!-- Icône mise à jour pour un style plus attrayant -->
+        </div>
+        <h2>Téléchargez depuis YouTube</h2>
+        <p>Recherchez et téléchargez vos chansons préférées directement depuis YouTube.</p>
+      </div>
+
+      <!-- Bloc 3 -->
+      <div class="feature-block">
+        <div class="icon-container">
+          <i class="fa fa-trash"></i>
+        </div>
+        <h2>Gérez vos morceaux</h2>
+        <p>Supprimez facilement les morceaux que vous ne souhaitez plus conserver.</p>
+      </div>
+    </div>
+
+    <hr class="separator">
+
+    <!-- Section 2 : Affichée uniquement si l'utilisateur n'est pas connecté -->
+    {% if not session.userId %}
+      <div class="cta-container">
+        <h2>Prêt à écouter de la musique ?</h2>
+        <p>Connectez-vous ou créez un compte pour accéder à toutes les fonctionnalités.</p>
+        <div class="button-container">
+          <a href="/auth/login" class="button primary">Se connecter</a>
+          <a href="/auth/register" class="button secondary">Créer un compte</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 {% endblock %}

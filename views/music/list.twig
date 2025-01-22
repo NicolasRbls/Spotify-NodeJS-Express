@@ -57,15 +57,59 @@
 
     <div class="list-container">
       <h2>Liste des morceaux</h2>
-      <ul class="track-list">
-        {% for track in tracks %}
-          <li class="track-item">
-            <strong>{{ track.title }}</strong> - {{ track.artist }}
-            <a href="/music/player/{{ track.id }}" class="button secondary">Écouter</a>
-            <a href="/music/delete/{{ track.id }}" class="button danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce morceau ?')">Supprimer</a>
-          </li>
-        {% endfor %}
-      </ul>
+      <div class="form-group">
+        <input type="text" id="search-bar" placeholder="Rechercher une musique..." class="input">
+      </div>
+      <div class="scroll-container">
+        <table class="track-table" id="track-table">
+          <thead>
+            <tr>
+              <th>Titre</th>
+              <th>Artiste</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for track in tracks %}
+              <tr>
+                <td>{{ track.title }}</td>
+                <td>{{ track.artist }}</td>
+                <td>
+                  <a href="/music/player/{{ track.id }}" class="button secondary">Écouter</a>
+                  <a href="/music/delete/{{ track.id }}" class="button danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce morceau ?')">Supprimer</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchBar = document.getElementById("search-bar");
+      const trackTable = document.getElementById("track-table");
+      const rows = trackTable.getElementsByTagName("tr");
+
+      searchBar.addEventListener("input", () => {
+        const filter = searchBar.value.toLowerCase();
+
+        // Parcourir toutes les lignes du tableau, sauf les en-têtes
+        for (let i = 1; i < rows.length; i++) {
+          const titleCell = rows[i].getElementsByTagName("td")[0];
+          const artistCell = rows[i].getElementsByTagName("td")[1];
+          const title = titleCell ? titleCell.textContent.toLowerCase() : "";
+          const artist = artistCell ? artistCell.textContent.toLowerCase() : "";
+
+          // Afficher ou masquer la ligne en fonction de la recherche
+          if (title.includes(filter) || artist.includes(filter)) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      });
+    });
+  </script>
 {% endblock %}
