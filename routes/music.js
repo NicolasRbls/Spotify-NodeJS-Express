@@ -203,4 +203,28 @@ router.get('/download', (req, res) => {
   });
 });
 
+// Route pour supprimer un morceau
+router.get('/delete/:id', (req, res) => {
+  const trackId = parseInt(req.params.id, 10);
+
+  db.get(`SELECT file FROM tracks WHERE id = ?`, [trackId], (err, track) => {
+    if (err || !track) {
+      console.error('Erreur lors de la récupération du fichier à supprimer :', err);
+      res.status(404).send('Morceau introuvable.');
+    } else {
+      // Supprimer le morceau de la base de données
+      db.run(`DELETE FROM tracks WHERE id = ?`, [trackId], (deleteErr) => {
+        if (deleteErr) {
+          console.error('Erreur lors de la suppression dans la base :', deleteErr);
+          res.status(500).send('Erreur lors de la suppression.');
+        } else {
+          console.log(`Morceau supprimé : ID ${trackId}`);
+          res.redirect('/music');
+        }
+      });
+    }
+  });
+});
+
+
 module.exports = router;
