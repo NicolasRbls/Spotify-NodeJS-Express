@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ title }}</title>
+</head>
+<body>
+  <h1>{{ title }}</h1>
+  <p><a href="/auth/logout">Déconnexion</a></p>
+  <ul>
+    {% for track in tracks %}
+      <li>
+        <strong>{{ track.title }}</strong> - {{ track.artist }}
+        ({{ track.album }}) - {{ track.duration }} secondes
+      </li>
+    {% endfor %}
+  </ul>
+  <h2>Ajouter un morceau</h2>
+  <form method="POST" action="/music/add">
+    <input type="text" name="title" placeholder="Titre" required />
+    <input type="text" name="artist" placeholder="Artiste" required />
+    <input type="text" name="album" placeholder="Album" />
+    <input type="number" name="duration" placeholder="Durée (secondes)" />
+    <button type="submit">Ajouter</button>
+  </form>
+</body>
+</html>
