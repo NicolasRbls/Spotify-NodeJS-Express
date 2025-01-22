@@ -81,16 +81,20 @@ Spotify-NodeJS-Express
    ```bash
    npm install
    ```
-3. Configurez les variables d'environnement dans un fichier `.env` :
+3. Avoir la base : 
+    ```bash
+    node .\database\db.js 
+    ```
+4. Configurez les variables d'environnement dans un fichier `.env` :
    ```env
    YOUTUBE_API_KEY=Votre_Cle_API_Youtube
    ```
-4. Assurez-vous que `yt-dlp` et `ffmpeg` sont installés et accessibles :
+5. Assurez-vous que `yt-dlp` et `ffmpeg` sont installés et accessibles :
    ```bash
    yt-dlp --version
    ffmpeg -version
    ```
-5. Lancez l'application :
+6. Lancez l'application :
    ```bash
    node app.js
    ```
